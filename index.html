@@ -1,0 +1,626 @@
+html_content = """<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 FIFA Dünya Kupası | Turnuva Rehberi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a1128;
+            --card-bg: #131f42;
+            --text-main: #f0f4f8;
+            --accent-red: #e63946;
+            --accent-blue: #457b9d;
+            --gold: #f4a261;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            background-image: radial-gradient(circle at top right, #1a2a5c 0%, transparent 40%),
+                              radial-gradient(circle at bottom left, #1a2a5c 0%, transparent 40%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Navbar / Tabs */
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 30px 20px;
+            background: rgba(10, 17, 40, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 2px solid var(--accent-blue);
+            color: var(--text-main);
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-family: 'Oswald', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .tab-btn:hover {
+            background: rgba(69, 123, 157, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+        }
+
+        /* Content Sections */
+        .section {
+            display: none;
+            padding: 40px 20px;
+            max-width: 1300px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-title {
+            text-align: center;
+            font-family: 'Oswald', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #fff, #a8b2d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--accent-blue);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        /* Groups Grid */
+        .groups-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .group-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            border-top: 4px solid var(--accent-blue);
+            transition: transform 0.3s ease;
+        }
+
+        .group-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .group-header {
+            background: rgba(0,0,0,0.2);
+            padding: 15px 20px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .team-list {
+            list-style: none;
+            padding: 10px 20px 20px;
+        }
+
+        .team-item {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .team-item:last-child {
+            border-bottom: none;
+        }
+
+        .team-item:hover {
+            color: var(--gold);
+        }
+
+        .team-item.turkey-highlight {
+            color: var(--accent-red);
+            font-weight: 800;
+        }
+        
+        .team-item.turkey-highlight:hover {
+            color: #ff6b77;
+        }
+
+        /* Turkey Squad Section */
+        .squad-hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 50px;
+            background: linear-gradient(135deg, var(--accent-red) 0%, #8a1c25 100%);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(230, 57, 70, 0.3);
+        }
+
+        .squad-hero h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 4rem;
+            line-height: 1.1;
+        }
+
+        .squad-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .players-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .player-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(230, 57, 70, 0.2);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .player-card:hover {
+            background: var(--accent-red);
+            transform: scale(1.05);
+            border-color: #fff;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+
+        /* Piksel Art Görsel Stili */
+        .player-pixel-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            margin: 0 auto 15px auto;
+            display: block;
+            image-rendering: pixelated; /* Piksel sanatın bozulmasını engeller */
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .player-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .player-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .player-pos {
+            font-size: 0.85rem;
+            color: #a8b2d1;
+        }
+        
+        .player-card:hover .player-pos {
+            color: #fff;
+        }
+
+        /* Modal / Tooltip */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            border: 2px solid var(--accent-blue);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-main);
+            background: none;
+            border: none;
+        }
+
+        .modal-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: var(--gold);
+        }
+
+        .modal-subtitle {
+            font-size: 1rem;
+            color: #a8b2d1;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+
+        .modal-stat {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        .stat-label {
+            font-weight: 600;
+            color: var(--accent-blue);
+        }
+
+        .stat-value {
+            font-weight: 800;
+        }
+
+        @media (max-width: 768px) {
+            .squad-hero {
+                flex-direction: column;
+                text-align: center;
+                padding: 30px 20px;
+            }
+            .squad-hero h2 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <button class="tab-btn active" onclick="switchTab('groups-section')">Turnuva Grupları</button>
+        <button class="tab-btn" onclick="switchTab('turkey-section')">Türkiye Geniş Kadro</button>
+    </nav>
+
+    <div class="modal-overlay" id="info-modal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal(event)">&times;</button>
+            <div class="modal-title" id="modal-title">İsim</div>
+            <div class="modal-subtitle" id="modal-subtitle">Detay</div>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <main id="groups-section" class="section active">
+        <h1 class="page-title">2026 Dünya Kupası Grupları</h1>
+        <p class="subtitle">Ülkelerin üzerine tıklayarak Transfermarkt verilerine göre piyasa değeri bilgilerini görebilirsin.</p>
+        
+        <div class="groups-container">
+            <div class="group-card">
+                <div class="group-header">A GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('Meksika', 'Tahmini Değer: ~250 Mil. €', 'Yıldız: Santiago Gimenez')">🇲🇽 Meksika</li>
+                    <li class="team-item" onclick="showTeamModal('Güney Afrika', 'Tahmini Değer: ~60 Mil. €', 'Yıldız: Lyle Foster')">🇿🇦 Güney Afrika</li>
+                    <li class="team-item" onclick="showTeamModal('Güney Kore', 'Tahmini Değer: ~180 Mil. €', 'Yıldız: Heung-min Son, Kim Min-jae')">🇰🇷 Güney Kore</li>
+                    <li class="team-item" onclick="showTeamModal('Çekya', 'Tahmini Değer: ~140 Mil. €', 'Yıldız: Tomas Soucek')">🇨🇿 Çekya</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">B GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('Kanada', 'Tahmini Değer: ~210 Mil. €', 'Yıldız: Alphonso Davies')">🇨🇦 Kanada</li>
+                    <li class="team-item" onclick="showTeamModal('Bosna Hersek', 'Tahmini Değer: ~90 Mil. €', 'Yıldız: Ermedin Demirovic')">🇧🇦 B. Hersek</li>
+                    <li class="team-item" onclick="showTeamModal('Katar', 'Tahmini Değer: ~25 Mil. €', 'Yıldız: Akram Afif')">🇶🇦 Katar</li>
+                    <li class="team-item" onclick="showTeamModal('İsviçre', 'Tahmini Değer: ~240 Mil. €', 'Yıldız: Manuel Akanji')">🇨🇭 İsviçre</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">C GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('Brezilya', 'Tahmini Değer: ~1.15 Milyar €', 'Yıldızlar: Vinicius Jr, Rodrygo')">🇧🇷 Brezilya</li>
+                    <li class="team-item" onclick="showTeamModal('Fas', 'Tahmini Değer: ~320 Mil. €', 'Yıldız: Achraf Hakimi')">🇲🇦 Fas</li>
+                    <li class="team-item" onclick="showTeamModal('Haiti', 'Tahmini Değer: ~15 Mil. €', 'Yıldız: Frantzdy Pierrot')">🇭🇹 Haiti</li>
+                    <li class="team-item" onclick="showTeamModal('İskoçya', 'Tahmini Değer: ~215 Mil. €', 'Yıldız: Andrew Robertson')">🏴󠁧󠁢󠁳󠁣󠁴󠁿 İskoçya</li>
+                </ul>
+            </div>
+            <div class="group-card" style="border-top-color: var(--accent-red);">
+                <div class="group-header">D GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('ABD', 'Gerçek Değer: 357 Mil. €', 'Yıldız: Christian Pulisic')">🇺🇸 ABD</li>
+                    <li class="team-item" onclick="showTeamModal('Paraguay', 'Gerçek Değer: 144 Mil. €', 'Yıldız: Julio Enciso')">🇵🇾 Paraguay</li>
+                    <li class="team-item" onclick="showTeamModal('Avustralya', 'Gerçek Değer: 51 Mil. €', 'Yıldız: Harry Souttar')">🇦🇺 Avustralya</li>
+                    <li class="team-item turkey-highlight" onclick="showTeamModal('Türkiye', 'Gerçek Değer: 440.20 Mil. €', 'D Grubunun en değerli takımı!')">🇹🇷 TÜRKİYE</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">E GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('Almanya', 'Tahmini Değer: ~900 Mil. €', 'Yıldız: Jamal Musiala')">🇩🇪 Almanya</li>
+                    <li class="team-item" onclick="showTeamModal('Curaçao', 'Tahmini Değer: ~10 Mil. €', 'Yıldız: Juninho Bacuna')">🇨🇼 Curaçao</li>
+                    <li class="team-item" onclick="showTeamModal('Fildişi Sahili', 'Tahmini Değer: ~280 Mil. €', 'Yıldız: Ousmane Diomande')">🇨🇮 F. Sahili</li>
+                    <li class="team-item" onclick="showTeamModal('Ekvador', 'Tahmini Değer: ~240 Mil. €', 'Yıldız: Moises Caicedo')">🇪🇨 Ekvador</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">F GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('Hollanda', 'Tahmini Değer: ~850 Mil. €', 'Yıldız: Xavi Simons')">🇳🇱 Hollanda</li>
+                    <li class="team-item" onclick="showTeamModal('Japonya', 'Tahmini Değer: ~310 Mil. €', 'Yıldız: Takefusa Kubo')">🇯🇵 Japonya</li>
+                    <li class="team-item" onclick="showTeamModal('İsveç', 'Tahmini Değer: ~350 Mil. €', 'Yıldız: Alexander Isak, Gyökeres')">🇸🇪 İsveç</li>
+                    <li class="team-item" onclick="showTeamModal('Tunus', 'Tahmini Değer: ~55 Mil. €', 'Yıldız: Ellyes Skhiri')">🇹🇳 Tunus</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">G GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('Belçika', 'Tahmini Değer: ~500 Mil. €', 'Yıldız: Jeremy Doku')">🇧🇪 Belçika</li>
+                    <li class="team-item" onclick="showTeamModal('Mısır', 'Tahmini Değer: ~120 Mil. €', 'Yıldız: Mohamed Salah')">🇪🇬 Mısır</li>
+                    <li class="team-item" onclick="showTeamModal('İran', 'Tahmini Değer: ~45 Mil. €', 'Yıldız: Mehdi Taremi')">🇮🇷 İran</li>
+                    <li class="team-item" onclick="showTeamModal('Yeni Zelanda', 'Tahmini Değer: ~35 Mil. €', 'Yıldız: Chris Wood')">🇳🇿 Yeni Zelanda</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">H GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('İspanya', 'Tahmini Değer: ~1.05 Milyar €', 'Yıldız: Lamine Yamal')">🇪🇸 İspanya</li>
+                    <li class="team-item" onclick="showTeamModal('Yeşil Burun', 'Tahmini Değer: ~40 Mil. €', 'Yıldız: Logan Costa')">🇨🇻 Yeşil Burun</li>
+                    <li class="team-item" onclick="showTeamModal('Suudi Arabistan', 'Tahmini Değer: ~30 Mil. €', 'Yıldız: Firas Al-Buraikan')">🇸🇦 S. Arabistan</li>
+                    <li class="team-item" onclick="showTeamModal('Uruguay', 'Tahmini Değer: ~450 Mil. €', 'Yıldız: Fede Valverde')">🇺🇾 Uruguay</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">I GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('Fransa', 'Tahmini Değer: ~1.25 Milyar €', 'Yıldız: Kylian Mbappe')">🇫🇷 Fransa</li>
+                    <li class="team-item" onclick="showTeamModal('Senegal', 'Tahmini Değer: ~290 Mil. €', 'Yıldız: Pape Matar Sarr')">🇸🇳 Senegal</li>
+                    <li class="team-item" onclick="showTeamModal('Irak', 'Tahmini Değer: ~15 Mil. €', 'Yıldız: Ali Jasim')">🇮🇶 Irak</li>
+                    <li class="team-item" onclick="showTeamModal('Norveç', 'Tahmini Değer: ~480 Mil. €', 'Yıldızlar: Haaland, Ødegaard')">🇳🇴 Norveç</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">J GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('Arjantin', 'Tahmini Değer: ~850 Mil. €', 'Yıldızlar: Lautaro Martinez, Enzo')">🇦🇷 Arjantin</li>
+                    <li class="team-item" onclick="showTeamModal('Cezayir', 'Tahmini Değer: ~210 Mil. €', 'Yıldız: Rayan Ait-Nouri')">🇩🇿 Cezayir</li>
+                    <li class="team-item" onclick="showTeamModal('Avusturya', 'Tahmini Değer: ~270 Mil. €', 'Yıldız: Marcel Sabitzer')">🇦🇹 Avusturya</li>
+                    <li class="team-item" onclick="showTeamModal('Ürdün', 'Tahmini Değer: ~18 Mil. €', 'Yıldız: Musa Al-Taamari')">🇯🇴 Ürdün</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">K GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('Portekiz', 'Tahmini Değer: ~1.05 Milyar €', 'Yıldız: Rafael Leao')">🇵🇹 Portekiz</li>
+                    <li class="team-item" onclick="showTeamModal('Kongo DC', 'Tahmini Değer: ~130 Mil. €', 'Yıldız: Yoane Wissa')">🇨🇩 Kongo</li>
+                    <li class="team-item" onclick="showTeamModal('Özbekistan', 'Tahmini Değer: ~35 Mil. €', 'Yıldız: Abbosbek Fayzullaev')">🇺🇿 Özbekistan</li>
+                    <li class="team-item" onclick="showTeamModal('Kolombiya', 'Tahmini Değer: ~300 Mil. €', 'Yıldız: Luis Diaz')">🇨🇴 Kolombiya</li>
+                </ul>
+            </div>
+            <div class="group-card">
+                <div class="group-header">L GRUBU</div>
+                <ul class="team-list">
+                    <li class="team-item" onclick="showTeamModal('İngiltere', 'Tahmini Değer: ~1.45 Milyar €', 'Yıldızlar: Bellingham, Foden')">🇬🇧 İngiltere</li>
+                    <li class="team-item" onclick="showTeamModal('Hırvatistan', 'Tahmini Değer: ~310 Mil. €', 'Yıldız: Josko Gvardiol')">🇭🇷 Hırvatistan</li>
+                    <li class="team-item" onclick="showTeamModal('Gana', 'Tahmini Değer: ~250 Mil. €', 'Yıldız: Mohammed Kudus')">🇬🇭 Gana</li>
+                    <li class="team-item" onclick="showTeamModal('Panama', 'Tahmini Değer: ~25 Mil. €', 'Yıldız: Adalberto Carrasquilla')">🇵🇦 Panama</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <main id="turkey-section" class="section">
+        
+        <div class="squad-hero">
+            <div>
+                <h2>BİZİM ÇOCUKLAR</h2>
+                <p>2026 FIFA Dünya Kupası Geniş Kadrosu</p>
+                <p style="font-size: 0.9rem; margin-top: 5px; color: #f4a261;">Oyuncuların üzerine tıklayarak verilerini görebilirsin.</p>
+            </div>
+        </div>
+
+        <div class="players-grid" id="players-list">
+            </div>
+
+    </main>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        const playersData = [
+            { name: "Arda Güler", pos: "On Numara", value: "90.00 mil. €", age: 21 },
+            { name: "Kenan Yıldız", pos: "Sol Kanat", value: "75.00 mil. €", age: 21 },
+            { name: "Can Uzun", pos: "On Numara", value: "45.00 mil. €", age: 20 },
+            { name: "Ferdi Kadıoğlu", pos: "Sol Bek", value: "30.00 mil. €", age: 26 },
+            { name: "Barış Alper Yılmaz", pos: "Sağ Kanat", value: "30.00 mil. €", age: 25 },
+            { name: "Orkun Kökçü", pos: "Merkez Orta Saha", value: "25.00 mil. €", age: 25 },
+            { name: "Kerem Aktürkoğlu", pos: "Sol Kanat", value: "20.00 mil. €", age: 27 },
+            { name: "Hakan Çalhanoğlu", pos: "Ön Libero", value: "18.00 mil. €", age: 32 },
+            { name: "Yunus Akgün", pos: "Sağ Kanat", value: "18.00 mil. €", age: 25 },
+            { name: "Uğurcan Çakır", pos: "Kaleci", value: "15.00 mil. €", age: 30 },
+            { name: "İsmail Yüksek", pos: "Ön Libero", value: "15.00 mil. €", age: 27 },
+            { name: "Yusuf Akçiçek", pos: "Stoper", value: "15.00 mil. €", age: 20 },
+            { name: "Merih Demiral", pos: "Stoper", value: "14.00 mil. €", age: 28 },
+            { name: "Zeki Çelik", pos: "Sağ Bek", value: "12.00 mil. €", age: 29 },
+            { name: "Ozan Kabak", pos: "Stoper", value: "10.00 mil. €", age: 26 },
+            { name: "Atakan Karazor", pos: "Ön Libero", value: "9.00 mil. €", age: 29 },
+            { name: "Altay Bayındır", pos: "Kaleci", value: "7.00 mil. €", age: 28 },
+            { name: "Mert Müldür", pos: "Sağ Bek", value: "7.00 mil. €", age: 27 },
+            { name: "Oğuz Aydın", pos: "Sol Kanat", value: "7.00 mil. €", age: 25 },
+            { name: "Abdülkerim Bardakcı", pos: "Stoper", value: "6.50 mil. €", age: 31 },
+            { name: "Aral Şimşir", pos: "Sol Kanat", value: "6.00 mil. €", age: 23 },
+            { name: "Demir Ege Tıknaz", pos: "Ön Libero", value: "6.00 mil. €", age: 21 },
+            { name: "Deniz Gül", pos: "Santrafor", value: "6.00 mil. €", age: 21 },
+            { name: "Eren Elmalı", pos: "Sol Bek", value: "5.00 mil. €", age: 25 },
+            { name: "Ahmetcan Kaplan", pos: "Stoper", value: "5.00 mil. €", age: 23 },
+            { name: "Ersin Destanoğlu", pos: "Kaleci", value: "4.00 mil. €", age: 25 },
+            { name: "Mustafa Eskihellaç", pos: "Sol Bek", value: "4.00 mil. €", age: 29 },
+            { name: "Yusuf Sarı", pos: "Sağ Kanat", value: "4.00 mil. €", age: 27 },
+            { name: "Muhammed Şengezer", pos: "Kaleci", value: "3.50 mil. €", age: 29 },
+            { name: "Çağlar Söyüncü", pos: "Stoper", value: "3.50 mil. €", age: 29 },
+            { name: "Salih Özcan", pos: "Ön Libero", value: "3.50 mil. €", age: 28 },
+            { name: "İrfan Can Kahveci", pos: "Sağ Kanat", value: "3.00 mil. €", age: 30 },
+            { name: "Kaan Ayhan", pos: "Ön Libero", value: "1.50 mil. €", age: 31 },
+            { name: "Samet Akaydin", pos: "Stoper", value: "1.20 mil. €", age: 32 },
+            { name: "Mert Günok", pos: "Kaleci", value: "500 bin €", age: 37 }
+        ];
+
+        const playersContainer = document.getElementById('players-list');
+        const visualOrder = [
+            "Altay Bayındır", "Ersin Destanoğlu", "Mert Günok", "Muhammed Şengezer", "Uğurcan Çakır",
+            "Abdülkerim Bardakcı", "Ahmetcan Kaplan", "Çağlar Söyüncü", "Eren Elmalı", "Ferdi Kadıoğlu", "Merih Demiral",
+            "Mert Müldür", "Mustafa Eskihellaç", "Ozan Kabak", "Samet Akaydin", "Yusuf Akçiçek", "Zeki Çelik",
+            "Atakan Karazor", "Demir Ege Tıknaz", "Hakan Çalhanoğlu", "İsmail Yüksek", "Kaan Ayhan", "Orkun Kökçü",
+            "Salih Özcan", "Aral Şimşir", "Arda Güler", "Barış Alper Yılmaz", "Can Uzun", "Deniz Gül",
+            "İrfan Can Kahveci", "Kenan Yıldız", "Kerem Aktürkoğlu", "Oğuz Aydın", "Yunus Akgün", "Yusuf Sarı"
+        ];
+
+        function formatNameForFile(name) {
+            const map = {
+                'ç': 'c', 'ğ': 'g', 'ı': 'i', 'ö': 'o', 'ş': 's', 'ü': 'u',
+                'Ç': 'C', 'Ğ': 'G', 'İ': 'I', 'Ö': 'O', 'Ş': 'S', 'Ü': 'U'
+            };
+            let formatted = name.replace(/[çğıöşüÇĞİÖŞÜ]/g, match => map[match]);
+            return formatted.toLowerCase().replace(/\s+/g, '-');
+        }
+
+        visualOrder.forEach(playerName => {
+            const playerInfo = playersData.find(p => p.name === playerName) || { pos: "Milli Futbolcu", value: "Bilinmiyor", age: "-" };
+            
+            const fileName = formatNameForFile(playerName) + '.png';
+            const imgPath = `img/${fileName}`;
+
+            const card = document.createElement('div');
+            card.className = 'player-card';
+            card.onclick = () => showPlayerModal(playerName, playerInfo);
+            
+            card.innerHTML = `
+                <img src="${imgPath}" class="player-pixel-img" alt="${playerName}" onerror="this.onerror=null; this.outerHTML='<div class=\\'player-icon\\'>🇹🇷</div>'">
+                <div class="player-name">${playerName}</div>
+                <div class="player-pos">${playerInfo.pos}</div>
+            `;
+            playersContainer.appendChild(card);
+        });
+
+        const modal = document.getElementById('info-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalSubtitle = document.getElementById('modal-subtitle');
+        const modalBody = document.getElementById('modal-body');
+
+        function showTeamModal(country, valueInfo, starPlayer) {
+            modalTitle.innerText = country;
+            modalSubtitle.innerText = "Milli Takım Bilgileri";
+            modalBody.innerHTML = `
+                <div class="modal-stat">
+                    <span class="stat-label">Toplam Kadro Değeri:</span>
+                    <span class="stat-value" style="color: var(--gold);">${valueInfo}</span>
+                </div>
+                <div class="modal-stat">
+                    <span class="stat-label">Öne Çıkan İsim(ler):</span>
+                    <span class="stat-value">${starPlayer}</span>
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+
+        function showPlayerModal(name, info) {
+            modalTitle.innerText = name;
+            modalSubtitle.innerText = "Transfermarkt Oyuncu Verisi";
+            modalBody.innerHTML = `
+                <div class="modal-stat">
+                    <span class="stat-label">Mevki:</span>
+                    <span class="stat-value">${info.pos}</span>
+                </div>
+                <div class="modal-stat">
+                    <span class="stat-label">Yaş:</span>
+                    <span class="stat-value">${info.age}</span>
+                </div>
+                <div class="modal-stat">
+                    <span class="stat-label">Güncel Piyasa Değeri:</span>
+                    <span class="stat-value" style="color: var(--gold); font-size: 1.3rem;">${info.value}</span>
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+
+        function closeModal(e) {
+            if(e) e.stopPropagation();
+            modal.classList.remove('active');
+        }
+    </script>
+</body>
+</html>
+"""
+
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+print("Final index.html successfully created.")
+
